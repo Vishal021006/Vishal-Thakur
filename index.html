@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn Hindi & Punjabi Alphabets</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        color: #fff;
+    }
+
+    @keyframes gradientBG {
+        0% {background-position: 0% 50%;}
+        50% {background-position: 100% 50%;}
+        100% {background-position: 0% 50%;}
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 5px #000;
+    }
+
+    .language-buttons button {
+        padding: 15px 25px;
+        margin: 0 10px;
+        font-size: 18px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+
+    .language-buttons button:hover {
+        transform: scale(1.1);
+    }
+
+    .letter-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+        background: rgba(0,0,0,0.3);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+    }
+
+    .letter-container img {
+        max-width: 200px;
+        margin: 15px 0;
+        border-radius: 10px;
+        border: 2px solid #fff;
+    }
+
+    .letter {
+        font-size: 60px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-shadow: 2px 2px 5px #000;
+    }
+
+    .control-buttons button {
+        padding: 10px 15px;
+        margin: 5px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+
+    .control-buttons button:hover {
+        transform: scale(1.1);
+    }
+</style>
+</head>
+<body>
+
+<h1>Learn Hindi & Punjabi Alphabets</h1>
+
+<div class="language-buttons">
+    <button onclick="startLearning('hindi')">Hindi</button>
+    <button onclick="startLearning('punjabi')">Punjabi</button>
+</div>
+
+<div class="letter-container" id="letterContainer" style="display:none;">
+    <div class="letter" id="currentLetter">अ</div>
+    <img id="letterImage" src="" alt="Letter Image">
+</div>
+
+<div class="control-buttons" id="controls" style="display:none;">
+    <button onclick="playVoice()">🔊 Voice</button>
+    <button onclick="prevLetter()">⏮ Preview</button>
+    <button onclick="nextLetter()">⏭ Next</button>
+    <button onclick="changeLanguage()">🌐 Change Language</button>
+</div>
+
+<script>
+    // Full list of Hindi and Punjabi letters with placeholder images
+    const data = {
+        hindi: [
+            {letter:"अ", image:"images/hindi/a.jpg"}, {letter:"आ", image:"images/hindi/aa.jpg"},
+            {letter:"इ", image:"images/hindi/i.jpg"}, {letter:"ई", image:"images/hindi/ii.jpg"},
+            {letter:"उ", image:"images/hindi/u.jpg"}, {letter:"ऊ", image:"images/hindi/uu.jpg"},
+            {letter:"ऋ", image:"images/hindi/ri.jpg"}, {letter:"ए", image:"images/hindi/e.jpg"},
+            {letter:"ऐ", image:"images/hindi/ai.jpg"}, {letter:"ओ", image:"images/hindi/o.jpg"},
+            {letter:"औ", image:"images/hindi/au.jpg"}, {letter:"क", image:"images/hindi/ka.jpg"},
+            {letter:"ख", image:"images/hindi/kha.jpg"}, {letter:"ग", image:"images/hindi/ga.jpg"},
+            {letter:"घ", image:"images/hindi/gha.jpg"}, {letter:"ङ", image:"images/hindi/nga.jpg"},
+            {letter:"च", image:"images/hindi/cha.jpg"}, {letter:"छ", image:"images/hindi/chha.jpg"},
+            {letter:"ज", image:"images/hindi/ja.jpg"}, {letter:"झ", image:"images/hindi/jha.jpg"},
+            {letter:"ञ", image:"images/hindi/nya.jpg"}, {letter:"ट", image:"images/hindi/ta.jpg"},
+            {letter:"ठ", image:"images/hindi/tha.jpg"}, {letter:"ड", image:"images/hindi/da.jpg"},
+            {letter:"ढ", image:"images/hindi/dha.jpg"}, {letter:"ण", image:"images/hindi/na.jpg"},
+            {letter:"त", image:"images/hindi/ta2.jpg"}, {letter:"थ", image:"images/hindi/tha2.jpg"},
+            {letter:"द", image:"images/hindi/da2.jpg"}, {letter:"ध", image:"images/hindi/dha2.jpg"},
+            {letter:"न", image:"images/hindi/na2.jpg"}, {letter:"प", image:"images/hindi/pa.jpg"},
+            {letter:"फ", image:"images/hindi/pha.jpg"}, {letter:"ब", image:"images/hindi/ba.jpg"},
+            {letter:"भ", image:"images/hindi/bha.jpg"}, {letter:"म", image:"images/hindi/ma.jpg"},
+            {letter:"य", image:"images/hindi/ya.jpg"}, {letter:"र", image:"images/hindi/ra.jpg"},
+            {letter:"ल", image:"images/hindi/la.jpg"}, {letter:"व", image:"images/hindi/va.jpg"},
+            {letter:"श", image:"images/hindi/sha.jpg"}, {letter:"ष", image:"images/hindi/sha2.jpg"},
+            {letter:"स", image:"images/hindi/sa.jpg"}, {letter:"ह", image:"images/hindi/ha.jpg"},
+            {letter:"क्ष", image:"images/hindi/ksha.jpg"}, {letter:"त्र", image:"images/hindi/tra.jpg"},
+            {letter:"ज्ञ", image:"images/hindi/gya.jpg"}
+        ],
+        punjabi: [
+            {letter:"ਅ", image:"images/punjabi/a.jpg"}, {letter:"ਆ", image:"images/punjabi/aa.jpg"},
+            {letter:"ਇ", image:"images/punjabi/i.jpg"}, {letter:"ਈ", image:"images/punjabi/ii.jpg"},
+            {letter:"ਉ", image:"images/punjabi/u.jpg"}, {letter:"ਊ", image:"images/punjabi/uu.jpg"},
+            {letter:"ਏ", image:"images/punjabi/e.jpg"}, {letter:"ਐ", image:"images/punjabi/ai.jpg"},
+            {letter:"ਓ", image:"images/punjabi/o.jpg"}, {letter:"ਔ", image:"images/punjabi/au.jpg"},
+            {letter:"ਕ", image:"images/punjabi/ka.jpg"}, {letter:"ਖ", image:"images/punjabi/kha.jpg"},
+            {letter:"ਗ", image:"images/punjabi/ga.jpg"}, {letter:"ਘ", image:"images/punjabi/gha.jpg"},
+            {letter:"ਙ", image:"images/punjabi/nga.jpg"}, {letter:"ਚ", image:"images/punjabi/cha.jpg"},
+            {letter:"ਛ", image:"images/punjabi/chha.jpg"}, {letter:"ਜ", image:"images/punjabi/ja.jpg"},
+            {letter:"ਝ", image:"images/punjabi/jha.jpg"}, {letter:"ਞ", image:"images/punjabi/nya.jpg"},
+            {letter:"ਟ", image:"images/punjabi/ta.jpg"}, {letter:"ਠ", image:"images/punjabi/tha.jpg"},
+            {letter:"ਡ", image:"images/punjabi/da.jpg"}, {letter:"ਢ", image:"images/punjabi/dha.jpg"},
+            {letter:"ਣ", image:"images/punjabi/na.jpg"}, {letter:"ਤ", image:"images/punjabi/ta2.jpg"},
+            {letter:"ਥ", image:"images/punjabi/tha2.jpg"}, {letter:"ਦ", image:"images/punjabi/da2.jpg"},
+            {letter:"ਧ", image:"images/punjabi/dha2.jpg"}, {letter:"ਨ", image:"images/punjabi/na2.jpg"},
+            {letter:"ਪ", image:"images/punjabi/pa.jpg"}, {letter:"ਫ", image:"images/punjabi/pha.jpg"},
+            {letter:"ਬ", image:"images/punjabi/ba.jpg"}, {letter:"ਭ", image:"images/punjabi/bha.jpg"},
+            {letter:"ਮ", image:"images/punjabi/ma.jpg"}, {letter:"ਯ", image:"images/punjabi/ya.jpg"},
+            {letter:"ਰ", image:"images/punjabi/ra.jpg"}, {letter:"ਲ", image:"images/punjabi/la.jpg"},
+            {letter:"ਵ", image:"images/punjabi/va.jpg"}, {letter:"ਸ਼", image:"images/punjabi/sha.jpg"},
+            {letter:"ਸ", image:"images/punjabi/sa.jpg"}, {letter:"ਹ", image:"images/punjabi/ha.jpg"},
+            {letter:"ਲ਼", image:"images/punjabi/la2.jpg"}
+        ]
+    };
+
+    let currentLang = "hindi";
+    let currentIndex = 0;
+
+    const letterContainer = document.getElementById('letterContainer');
+    const controls = document.getElementById('controls');
+    const currentLetter = document.getElementById('currentLetter');
+    const letterImage = document.getElementById('letterImage');
+
+    function startLearning(lang) {
+        currentLang = lang;
+        currentIndex = 0;
+        showLetter();
+        letterContainer.style.display = 'flex';
+        controls.style.display = 'block';
+    }
+
+    function showLetter() {
+        const item = data[currentLang][currentIndex];
+        currentLetter.textContent = item.letter;
+        letterImage.src = item.image;
+        letterImage.alt = item.letter;
+    }
+
+    function playVoice() {
+        const item = data[currentLang][currentIndex];
+        const utterance = new SpeechSynthesisUtterance(item.letter);
+        utterance.lang = currentLang === 'hindi' ? 'hi-IN' : 'pa-IN';
+        speechSynthesis.speak(utterance);
+    }
+
+    function nextLetter() {
+        currentIndex++;
+        if(currentIndex >= data[currentLang].length) currentIndex = 0;
+        showLetter();
+    }
+
+    function prevLetter() {
+        currentIndex--;
+        if(currentIndex < 0) currentIndex = data[currentLang].length - 1;
+        showLetter();
+    }
+
+    function changeLanguage() {
+        currentLang = currentLang === 'hindi' ? 'punjabi' : 'hindi';
+        currentIndex = 0;
+        showLetter();
+    }
+</script>
+
+</body>
+</html>
